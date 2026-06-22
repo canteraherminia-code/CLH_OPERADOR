@@ -323,38 +323,74 @@ const API =
 
 window.onload = function(){
 
-  fetch(
+  fetch(API + "&accion=operarios")
 
-    API +
+.then(r=>r.json())
 
-    "&accion=operarios"
+.then(lista=>{
 
-  )
+  cargarUsuarios(lista);
 
-  .then(r=>r.json())
+  localStorage.setItem(
 
-  .then(lista=>{
+    "operarios",
 
-    cargarUsuarios(lista);
+    JSON.stringify(lista)
 
-  });
+  );
+
+})
+
+.catch(()=>{
+
+  const lista = JSON.parse(
+
+    localStorage.getItem(
+
+      "operarios"
+
+    ) || "[]"
+
+  );
+
+  cargarUsuarios(lista);
+
+});
 
 
-  fetch(
+  fetch(API + "&accion=vehiculos")
 
-    API +
+.then(r=>r.json())
 
-    "&accion=vehiculos"
+.then(lista=>{
 
-  )
+  cargarMaquinas(lista);
 
-  .then(r=>r.json())
+  localStorage.setItem(
 
-  .then(lista=>{
+    "maquinas",
 
-    cargarMaquinas(lista);
+    JSON.stringify(lista)
 
-  });
+  );
+
+})
+
+.catch(()=>{
+
+  const lista = JSON.parse(
+
+    localStorage.getItem(
+
+      "maquinas"
+
+    ) || "[]"
+
+  );
+
+  cargarMaquinas(lista);
+
+});
 
 
   sincronizarPendientes();
@@ -498,17 +534,7 @@ function buscarUltimoRegistro(){
   if(!maquina) return;
 
 
-  fetch(
-
-  API +
-
-  "&accion=ultimoRegistro" +
-
-  "&maquina=" +
-
-  encodeURIComponent(maquina)
-
-)
+  fetch(API + "&accion=ultimoRegistro" + "&maquina=" + encodeURIComponent(maquina) )
 
 .then(r=>r.json())
 
