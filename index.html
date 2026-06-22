@@ -323,196 +323,83 @@ const API =
 
 window.onload = function(){
 
-  fetch(API + "&accion=operarios")
+  if(navigator.onLine){
 
-.then(r=>r.json())
+    // OPERARIOS
 
-.then(lista=>{
+    fetch(API + "&accion=operarios")
 
-  cargarUsuarios(lista);
+    .then(r=>r.json())
 
-  localStorage.setItem(
+    .then(lista=>{
 
-    "operarios",
+      cargarUsuarios(lista);
 
-    JSON.stringify(lista)
+      localStorage.setItem(
 
-  );
+        "operarios",
 
-})
-
-.catch(()=>{
-
-  const lista = JSON.parse(
-
-    localStorage.getItem(
-
-      "operarios"
-
-    ) || "[]"
-
-  );
-
-  cargarUsuarios(lista);
-
-});
-
-
-  fetch(API + "&accion=vehiculos")
-
-.then(r=>r.json())
-
-.then(lista=>{
-
-  cargarMaquinas(lista);
-
-  localStorage.setItem(
-
-    "maquinas",
-
-    JSON.stringify(lista)
-
-  );
-
-})
-
-.catch(()=>{
-
-  const lista = JSON.parse(
-
-    localStorage.getItem(
-
-      "maquinas"
-
-    ) || "[]"
-
-  );
-
-  cargarMaquinas(lista);
-
-});
-
-
-  sincronizarPendientes();
-
-}
-
-
-/* =========================
-   OPERARIOS
-========================= */
-
-function cargarUsuarios(lista){
-
-  const select =
-
-    document.getElementById("operador");
-
-  select.innerHTML =
-
-    '<option value="">Seleccione...</option>';
-
-  lista.forEach(u=>{
-
-    const option =
-
-      document.createElement("option");
-
-    option.value = u.nombre;
-
-    option.textContent = u.nombre;
-
-    select.appendChild(option);
-
-  });
-
-}
-
-
-/* =========================
-   MAQUINAS
-========================= */
-
-function cargarMaquinas(lista){
-
-  const select =
-
-    document.getElementById(
-
-      "maquina"
-
-    );
-
-
-  select.innerHTML =
-
-    '<option value="">Seleccione...</option>';
-
-
-  lista.forEach(m=>{
-
-    console.log(
-
-      "LISTA:",
-
-      "[" + m + "]"
-
-    );
-
-    const option =
-
-      document.createElement(
-
-        "option"
+        JSON.stringify(lista)
 
       );
 
-    option.value =
-
-      String(m).trim();
-
-    option.textContent =
-
-      String(m).trim();
-
-    select.appendChild(option);
-
-  });
+    });
 
 
-  console.log(
+    // MAQUINAS
 
-    "QR:",
+    fetch(API + "&accion=vehiculos")
 
-    "[" + maquinaQR + "]"
+    .then(r=>r.json())
 
-  );
+    .then(lista=>{
 
+      cargarMaquinas(lista);
 
-  const maq =
+      localStorage.setItem(
 
-    String(maquinaQR)
+        "maquinas",
 
-      .trim();
+        JSON.stringify(lista)
 
+      );
 
-  select.value = maq;
-
-
-  console.log(
-
-    "SELECCIONADO:",
-
-    select.value
-
-  );
+    });
 
 
-  if(select.value){
+  }else{
 
-    buscarUltimoRegistro();
+    // SIN INTERNET
+
+    const operarios = JSON.parse(
+
+      localStorage.getItem(
+
+        "operarios"
+
+      ) || "[]"
+
+    );
+
+    cargarUsuarios(operarios);
+
+
+    const maquinas = JSON.parse(
+
+      localStorage.getItem(
+
+        "maquinas"
+
+      ) || "[]"
+
+    );
+
+    cargarMaquinas(maquinas);
 
   }
+
+
+  sincronizarPendientes();
 
 }
 
