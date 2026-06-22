@@ -983,6 +983,82 @@ window.addEventListener(
 
 );
 
+function cargarUsuarios(lista){
+
+  const select =
+
+    document.getElementById(
+
+      "operador"
+
+    );
+
+  select.innerHTML =
+
+    '<option value="">Seleccione...</option>';
+
+  lista.forEach(u=>{
+
+    const option =
+
+      document.createElement(
+
+        "option"
+
+      );
+
+    option.value =
+
+      u.nombre || u;
+
+    option.textContent =
+
+      u.nombre || u;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+function cargarMaquinas(lista){
+
+  const select =
+
+    document.getElementById(
+
+      "maquina"
+
+    );
+
+  select.innerHTML =
+
+    '<option value="">Seleccione...</option>';
+
+  lista.forEach(m=>{
+
+    const option =
+
+      document.createElement(
+
+        "option"
+
+      );
+
+    option.value =
+
+      String(m).trim();
+
+    option.textContent =
+
+      String(m).trim();
+
+    select.appendChild(option);
+
+  });
+
+}
+
 </script>
 
 </body>
