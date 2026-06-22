@@ -1,44 +1,30 @@
-const CACHE_NAME =
-
-"clh-operador-v1";
-
+const CACHE_NAME = "clh-operador-v1";
 
 const urlsToCache = [
 
-"/",
+"./",
 
-"/manifest.json",
+"./index.html",
 
-"/logo-192.png",
-
-"/logo-512.png"
+"./manifest.json"
 
 ];
-
 
 self.addEventListener(
 
 "install",
 
-event=>{
+event => {
 
 event.waitUntil(
 
-caches.open(
+caches.open(CACHE_NAME)
 
-CACHE_NAME
+.then(cache =>
+
+cache.addAll(urlsToCache)
 
 )
-
-.then(cache=>{
-
-return cache.addAll(
-
-urlsToCache
-
-);
-
-})
 
 );
 
@@ -51,25 +37,17 @@ self.addEventListener(
 
 "fetch",
 
-event=>{
+event => {
 
 event.respondWith(
 
-caches.match(
+caches.match(event.request)
 
-event.request
-
-)
-
-.then(response=>{
+.then(response => {
 
 return response ||
 
-fetch(
-
-event.request
-
-);
+fetch(event.request);
 
 })
 
