@@ -1,41 +1,179 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <head>
 
-<meta charset="UTF-8">
+<base target="_top">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
 
-<title>CLH Operador</title>
+<title>CLH OPERADOR</title>
 
 <style>
 
 body{
-
-  background:#075E54;
-
-  color:white;
-
   font-family:Arial;
+  background:#f4f6f9;
+  padding:15px;
+}
 
-  text-align:center;
+.topbar{
 
-  padding-top:100px;
+background:#075E54;
+
+color:white;
+
+height:130px;
+
+padding:0 20px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin:-15px -15px 20px -15px;
 
 }
 
-h1{
+.titulo{
 
-  font-size:50px;
+font-size:32px;
+
+font-weight:bold;
 
 }
 
-p{
+.logo{
+
+height:340px;
+
+width:auto;
+margin-top:25px;
+  transform:
+
+    translateX(126px)
+
+}
+
+.card{
+
+background:white;
+
+border-radius:20px;
+
+padding:22px;
+
+box-shadow:
+
+
+0 4px 18px
+
+rgba(0,0,0,.15);
+
+}
+
+
+h2{
+
+  color:#1976d2;
+
+}
+
+label{
+
+  display:block;
+
+  margin-top:30px;
+
+  margin-bottom:10px;
 
   font-size:28px;
 
+  font-weight:bold;
+
+  color:#333;
+
 }
+
+input,
+select,
+textarea{
+
+width:100%;
+
+height:120px;
+
+font-size:32px;
+
+border:1px solid #ddd;
+
+border-radius:22px;
+
+padding:0 20px;
+
+box-sizing:border-box;
+
+}
+
+
+button{
+
+  width:100%;
+
+  height:75px;          /* altura */
+
+  margin-top:35px;
+
+  border:none;
+
+  border-radius:38px;   /* bordes redondeados */
+
+  background:#25D366;
+
+  color:white;
+
+  font-size:28px;       /* tamaño del texto */
+
+  font-weight:bold;
+
+}
+
+button:hover{
+
+  background:#1258a8;
+
+}
+
+#ultimoRegistro{
+
+margin-top:50px;
+
+padding:25px;
+
+background:#F1F8F6;
+
+border-left:6px solid #25D366;
+
+border-radius:18px;
+
+text-align:center;
+
+color:#075E54;
+
+font-size:28px;     /*<--agregar */
+font-weight:bold;  /*<--agregar */
+
+box-shadow:
+
+0 2px 8px
+
+rgba(0,0,0,.08);
+
+}
+
 
 </style>
 
@@ -43,9 +181,927 @@ p{
 
 <body>
 
-<h1>🚜 CLH OPERADOR</h1>
+ <div class="topbar">
 
-<p>Servidor local funcionando correctamente</p>
+  <div class="titulo">
+
+   ⚙️ CLH OPERADOR
+
+  </div>
+
+<img
+
+src="https://drive.google.com/thumbnail?id=12qQSH1wmQTad4yNZtZxDSH9FEYdavHw8&sz=w500"
+
+class="logo">
+
+</div>
+
+<div class="card">
+
+
+<h2>📋 Registro Diario</h2>
+
+
+<label>Operador</label>
+
+<select id="operador">
+
+<option value="">
+Seleccione...
+</option>
+
+</select>
+
+
+<label>Máquina</label>
+
+<select
+
+id="maquina"
+
+onchange="buscarUltimoRegistro()">
+
+<option value="">
+Seleccione...
+</option>
+
+</select>
+
+
+<div id="ultimoRegistro">
+
+</div>
+
+
+<label>Horómetro / KM</label>
+
+<input
+
+type="number"
+
+id="horometro_km"
+
+placeholder="Ej: 12450">
+
+
+<label>Combustible cargado (Litros)</label>
+
+<input
+
+type="number"
+
+id="combustible"
+
+value="0">
+
+
+<label>Estado</label>
+
+<select id="estado">
+
+<option value="OPERATIVA">
+
+OPERATIVA
+
+</option>
+
+<option value="TALLER">
+
+TALLER
+
+</option>
+
+<option value="SERVICIO">
+
+SERVICIO
+
+</option>
+
+<option value="REPARACION">
+
+REPARACION
+
+</option>
+
+</select>
+
+
+<label>Observación</label>
+
+<textarea
+
+id="observacion"
+
+rows="3"
+
+placeholder="Comentario opcional">
+
+</textarea>
+
+
+<button onclick="guardar()">
+
+GUARDAR REGISTRO
+
+</button>
+
+</div>
+
+
+<script>
+
+const maquinaQR = "";
+
+let ultimoHorometro = 0;
+
+const API =
+
+"https://script.google.com/macros/s/AKfycbzFjyXy6SZ7cuOO18XzJsUGQGgXnuFPPzTEkcyGGdXcfVgznevOh1FulJ6wHG4dcXwH/exec?app=api";
+
+/* =========================
+   CARGA INICIAL
+========================= */
+
+window.onload = function(){
+
+  fetch(
+
+    API +
+
+    "&accion=operarios"
+
+  )
+
+  .then(r=>r.json())
+
+  .then(lista=>{
+
+    cargarUsuarios(lista);
+
+  });
+
+
+  fetch(
+
+    API +
+
+    "&accion=vehiculos"
+
+  )
+
+  .then(r=>r.json())
+
+  .then(lista=>{
+
+    cargarMaquinas(lista);
+
+  });
+
+
+  sincronizarPendientes();
+
+}
+
+
+/* =========================
+   OPERARIOS
+========================= */
+
+function cargarUsuarios(lista){
+
+  const select =
+
+    document.getElementById("operador");
+
+  select.innerHTML =
+
+    '<option value="">Seleccione...</option>';
+
+  lista.forEach(u=>{
+
+    const option =
+
+      document.createElement("option");
+
+    option.value = u.nombre;
+
+    option.textContent = u.nombre;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+/* =========================
+   MAQUINAS
+========================= */
+
+function cargarMaquinas(lista){
+
+  const select =
+
+    document.getElementById(
+
+      "maquina"
+
+    );
+
+
+  select.innerHTML =
+
+    '<option value="">Seleccione...</option>';
+
+
+  lista.forEach(m=>{
+
+    console.log(
+
+      "LISTA:",
+
+      "[" + m + "]"
+
+    );
+
+    const option =
+
+      document.createElement(
+
+        "option"
+
+      );
+
+    option.value =
+
+      String(m).trim();
+
+    option.textContent =
+
+      String(m).trim();
+
+    select.appendChild(option);
+
+  });
+
+
+  console.log(
+
+    "QR:",
+
+    "[" + maquinaQR + "]"
+
+  );
+
+
+  const maq =
+
+    String(maquinaQR)
+
+      .trim();
+
+
+  select.value = maq;
+
+
+  console.log(
+
+    "SELECCIONADO:",
+
+    select.value
+
+  );
+
+
+  if(select.value){
+
+    buscarUltimoRegistro();
+
+  }
+
+}
+
+
+/* =========================
+   ULTIMO HOROMETRO
+========================= */
+
+function buscarUltimoRegistro(){
+
+  const maquina =
+
+    document
+
+      .getElementById("maquina")
+
+      .value;
+
+  if(!maquina) return;
+
+
+  fetch(
+
+  API +
+
+  "&accion=ultimoRegistro" +
+
+  "&maquina=" +
+
+  encodeURIComponent(maquina)
+
+)
+
+.then(r=>r.json())
+
+.then(function(r){
+
+  console.log(r);
+
+  const div =
+
+    document.getElementById(
+
+      "ultimoRegistro"
+
+    );
+
+  div.style.display =
+
+    "block";
+
+
+  if(!r.encontrado){
+
+    ultimoHorometro = 0;
+
+    div.innerHTML =
+
+      "<b>No hay registros previos</b>";
+
+    return;
+
+  }
+
+
+  ultimoHorometro =
+
+    Number(r.horometro);
+
+
+  div.innerHTML =
+
+"🚜 " +
+
+maquina +
+
+"<br><br>"
+
++
+
+"<span style='font-size:18px'>"
+
++
+
+"Último Horómetro"
+
++
+
+"</span>"
+
++
+
+"<div style='font-size:42px;font-weight:bold;margin-top:10px;'>"
+
++
+
+r.horometro
+
++
+
+"</div>";
+
+
+  document
+
+    .getElementById(
+
+      "horometro_km"
+
+    )
+
+    .placeholder =
+
+      "Último: "
+
+      +
+
+      r.horometro;
+
+});
+
+}
+
+
+/* =========================
+   GUARDAR LOCAL
+========================= */
+
+function guardarLocal(data){
+
+  let pendientes =
+
+    JSON.parse(
+
+      localStorage.getItem(
+
+        "registrosPendientes"
+
+      ) || "[]"
+
+    );
+
+  pendientes.push(data);
+
+  localStorage.setItem(
+
+    "registrosPendientes",
+
+    JSON.stringify(pendientes)
+
+  );
+
+}
+
+
+/* =========================
+   LEER PENDIENTES
+========================= */
+
+function obtenerPendientes(){
+
+  return JSON.parse(
+
+    localStorage.getItem(
+
+      "registrosPendientes"
+
+    ) || "[]"
+
+  );
+
+}
+
+
+/* =========================
+   BORRAR PENDIENTES
+========================= */
+
+function borrarPendientes(){
+
+  localStorage.removeItem(
+
+    "registrosPendientes"
+
+  );
+
+}
+
+
+async function sincronizarPendientes(){
+
+  if(!navigator.onLine){
+
+    return;
+
+  }
+
+  let pendientes =
+
+    obtenerPendientes();
+
+  if(
+
+    pendientes.length == 0
+
+  ){
+
+    return;
+
+  }
+
+  console.log(
+
+    "Sincronizando",
+
+    pendientes.length,
+
+    "registros"
+
+  );
+
+
+  let restantes = [];
+
+
+  for(const reg of pendientes){
+
+    try{
+
+      const r =
+
+        await fetch(
+
+          "https://script.google.com/macros/s/AKfycbzFjyXy6SZ7cuOO18XzJsUGQGgXnuFPPzTEkcyGGdXcfVgznevOh1FulJ6wHG4dcXwH/exec",
+
+          {
+
+            method:"POST",
+
+            headers:{
+
+              "Content-Type":
+
+                "application/json"
+
+            },
+
+            body:
+
+              JSON.stringify(reg)
+
+          }
+
+        );
+
+
+      const res =
+
+        await r.json();
+
+
+      console.log(res);
+
+
+      if(!res.exito){
+
+        restantes.push(reg);
+
+      }
+
+    }
+
+    catch(err){
+
+      console.log(err);
+
+      restantes.push(reg);
+
+    }
+
+  }
+
+
+  localStorage.setItem(
+
+    "registrosPendientes",
+
+    JSON.stringify(restantes)
+
+  );
+
+
+  if(
+
+    restantes.length == 0
+
+  ){
+
+    console.log(
+
+      "Todos los registros sincronizados"
+
+    );
+
+  }
+
+  else{
+
+    console.log(
+
+      restantes.length +
+
+      " registros quedaron pendientes"
+
+    );
+
+  }
+
+}
+
+/* =========================
+   GUARDAR
+========================= */
+
+function guardar(){
+
+  const data = {
+
+    operador:
+
+      document
+
+        .getElementById("operador")
+
+        .value,
+
+    maquina:
+
+      document
+
+        .getElementById("maquina")
+
+        .value,
+
+    horometro:
+
+      document
+
+        .getElementById("horometro_km")
+
+        .value,
+
+    combustible:
+
+      document
+
+        .getElementById("combustible")
+
+        .value,
+
+    estado:
+
+      document
+
+        .getElementById("estado")
+
+        .value,
+
+    observacion:
+
+      document
+
+        .getElementById("observacion")
+
+        .value
+
+  };
+
+
+  if(!data.operador){
+
+    alert("Seleccione operador");
+
+    return;
+
+  }
+
+
+  if(!data.maquina){
+
+    alert("Seleccione máquina");
+
+    return;
+
+  }
+
+
+  if(!data.horometro){
+
+    alert("Ingrese Horómetro / KM");
+
+    return;
+
+  }
+
+
+  if(
+
+    Number(data.horometro)
+
+    <=
+
+    ultimoHorometro
+
+  ){
+
+    alert(
+
+      "El horómetro debe ser mayor a "
+
+      + ultimoHorometro
+
+    );
+
+    return;
+
+  }
+
+
+  if(navigator.onLine){
+
+  fetch(
+
+  "https://script.google.com/macros/s/AKfycbzFjyXy6SZ7cuOO18XzJsUGQGgXnuFPPzTEkcyGGdXcfVgznevOh1FulJ6wHG4dcXwH/exec",
+
+  {
+
+    method:"POST",
+
+    headers:{
+
+      "Content-Type":
+
+        "application/json"
+
+    },
+
+    body:
+
+      JSON.stringify(data)
+
+  }
+
+)
+
+.then(r=>r.json())
+
+.then(function(r){
+
+  alert(r.mensaje);
+
+
+  if(r.exito){
+
+    document
+
+      .getElementById(
+
+        "horometro_km"
+
+      )
+
+      .value="";
+
+
+    document
+
+      .getElementById(
+
+        "combustible"
+
+      )
+
+      .value="0";
+
+
+    document
+
+      .getElementById(
+
+        "observacion"
+
+      )
+
+      .value="";
+
+  }
+
+})
+
+.catch(function(error){
+
+  console.log(error);
+
+  guardarLocal(data);
+
+  alert(
+
+    "Sin conexión.\n" +
+
+    "Registro guardado localmente."
+
+  );
+
+});
+
+}else{
+
+  guardarLocal(data);
+
+  alert(
+
+    "⚠ Sin conexión.\n\n" +
+
+    "El registro quedó guardado " +
+
+    "en este navegador y se " +
+
+    "sincronizará cuando vuelva internet."
+
+  );
+
+}
+
+}
+
+if(
+
+"serviceWorker"
+
+in navigator
+
+){
+
+navigator.serviceWorker.register(
+
+"/service-worker.js"
+
+)
+
+.then(()=>{
+
+console.log(
+
+"Service Worker OK"
+
+);
+
+});
+
+}
+
+
+window.addEventListener(
+
+  "online",
+
+  ()=>{
+
+    sincronizarPendientes();
+
+  }
+
+);
+
+
+window.onload = function(){
+
+  google.script.run
+
+    .withSuccessHandler(
+
+      cargarUsuarios
+
+    )
+
+    .obtenerOperarios();
+
+  google.script.run
+
+    .withSuccessHandler(
+
+      cargarMaquinas
+
+    )
+
+    .obtenerVehiculos();
+
+
+  sincronizarPendientes();
+
+}
+
+
+window.addEventListener(
+
+  "online",
+
+  ()=>{
+
+    console.log(
+
+      "Internet restaurado"
+
+    );
+
+    sincronizarPendientes();
+
+  }
+
+);
+
+</script>
 
 </body>
 
