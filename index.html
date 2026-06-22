@@ -24,9 +24,9 @@ background:#075E54;
 
 color:white;
 
-height:130px;
+height:auto;
 
-padding:0 20px;
+padding:15px 20px;
 
 display:flex;
 
@@ -48,13 +48,11 @@ font-weight:bold;
 
 .logo{
 
-height:340px;
+height:90px;
 
 width:auto;
-margin-top:25px;
-  transform:
-
-    translateX(126px)
+margin-top:10px;
+  transform:none;
 
 }
 
@@ -1053,35 +1051,6 @@ window.addEventListener(
   }
 
 );
-
-
-window.onload = function(){
-
-  google.script.run
-
-    .withSuccessHandler(
-
-      cargarUsuarios
-
-    )
-
-    .obtenerOperarios();
-
-  google.script.run
-
-    .withSuccessHandler(
-
-      cargarMaquinas
-
-    )
-
-    .obtenerVehiculos();
-
-
-  sincronizarPendientes();
-
-}
-
 
 window.addEventListener(
 
