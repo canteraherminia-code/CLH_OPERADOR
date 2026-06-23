@@ -421,13 +421,88 @@ function buscarUltimoRegistro(){
   if(!maquina) return;
 
 
-  fetch(API + "&accion=ultimoRegistro" + "&maquina=" + encodeURIComponent(maquina) )
+  // SI HAY INTERNET
 
-.then(r=>r.json())
+  if(navigator.onLine){
 
-.then(function(r){
+    fetch(
 
-  console.log(r);
+      API
+
+      + "&accion=ultimoRegistro"
+
+      + "&maquina="
+
+      + encodeURIComponent(maquina)
+
+    )
+
+    .then(r=>r.json())
+
+    .then(function(r){
+
+      mostrarUltimoRegistro(
+
+        maquina,
+
+        r
+
+      );
+
+
+      // GUARDAR EN EL NAVEGADOR
+
+      localStorage.setItem(
+
+        "ultimo_" + maquina,
+
+        JSON.stringify(r)
+
+      );
+
+    });
+
+  }
+
+  else{
+
+    // SIN INTERNET
+
+    const r = JSON.parse(
+
+      localStorage.getItem(
+
+        "ultimo_" + maquina
+
+      )
+
+      ||
+
+      '{"encontrado":false}'
+
+    );
+
+
+    mostrarUltimoRegistro(
+
+      maquina,
+
+      r
+
+    );
+
+  }
+
+}
+
+
+function mostrarUltimoRegistro(
+
+  maquina,
+
+  r
+
+){
 
   const div =
 
@@ -436,6 +511,7 @@ function buscarUltimoRegistro(){
       "ultimoRegistro"
 
     );
+
 
   div.style.display =
 
@@ -462,9 +538,13 @@ function buscarUltimoRegistro(){
 
   div.innerHTML =
 
-"🚜 " +
+"🚜 "
 
-maquina +
++
+
+maquina
+
++
 
 "<br><br>"
 
@@ -509,10 +589,7 @@ r.horometro
 
       r.horometro;
 
-});
-
 }
-
 
 /* =========================
    GUARDAR LOCAL
